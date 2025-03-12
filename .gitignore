@@ -1,0 +1,7 @@
+# Create .gitignore for Node/Python projects
+echo node_modules/ > .gitignore
+echo .env >> .gitignore
+echo __pycache__/ >> .gitignore
+echo .splash/ >> .gitignore
+echo *.log >> .gitignore
+echo build/ >> .gitignore
