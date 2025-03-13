@@ -9,6 +9,9 @@ from splashstats import (
     create_radar_chart, create_player_stats_table
 )
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS so your JS app can call the backend
 
