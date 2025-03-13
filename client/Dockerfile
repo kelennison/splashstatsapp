@@ -31,11 +31,11 @@ RUN npm run build
 # Production stage
 FROM nginx:alpine
 
-# Copy built assets including images
-COPY --from=builder /app/build /usr/share/nginx/html
-
 # Copy nginx config template
-COPY nginx.conf.template /etc/nginx/templates/
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+
+# Copy built assets
+COPY --from=builder /app/build /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
