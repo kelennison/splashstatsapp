@@ -25,7 +25,7 @@ function App() {
 
   // Fetch the list of players from the backend
   useEffect(() => {
-    fetch('http://localhost:5000/api/players')
+    fetch(`${process.env.REACT_APP_API_URL}/api/players`)
       .then((res) => res.json())
       .then((data) => setPlayers(data));
   }, []);
@@ -117,7 +117,7 @@ function App() {
 
   // Update useEffect to include season
   useEffect(() => {
-  fetch(`http://localhost:5000/api/players?season=${selectedSeason}&type=${seasonType}`)
+  fetch(`${process.env.REACT_APP_API_URL}/api/players?season=${selectedSeason}&type=${seasonType}`)
     .then((res) => res.json())
     .then((data) => setPlayers(data));
   }, [selectedSeason, seasonType]);  // Add seasonType to dependencies
@@ -133,11 +133,12 @@ function App() {
       season_type: seasonType
     };
 
-    fetch('http://localhost:5000/api/radar', {
+    fetch(`${process.env.REACT_APP_API_URL}/api/radar`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
+
       .then((response) => response.json())
       .then((data) => {
         // Radar chart remains as a static image
