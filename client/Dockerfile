@@ -1,23 +1,41 @@
 # Build stage
-FROM node:20-alpine as builder
+FROM node:22.14-alpine3.21 as builder
+
+# Install system dependencies (for plotly.js and native modules)
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    libc6-compat \
+    libpng-dev \
+    pango-dev \
+    cairo-dev \
+    jpeg-dev \
+    giflib-dev
+
+# Install npm packages
 WORKDIR /app
-
-# Set default API URL (can be overridden via Render's env vars)
-ARG REACT_APP_API_URL=https://your-backend.onrender.com
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
-
 COPY package*.json ./
-RUN npm ci
-COPY . .
+RUN npm ci --legacy-peer-deps  # Required for plotly.js peer dependencies
+
+# Copy source files including images
+COPY public/ public/
+COPY src/ src/
+COPY .env ./
+
+# Build the app
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 RUN npm run build
 
-# Runtime stage
+# Production stage
 FROM nginx:alpine
+
+# Copy built assets including images
 COPY --from=builder /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Use Render's PORT (default to 80)
-ENV PORT=80
-EXPOSE $PORT
+# Copy nginx config template
+COPY nginx.conf.template /etc/nginx/templates/
 
-CMD ["sh", "-c", "nginx -g 'daemon off;'"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
