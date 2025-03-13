@@ -34,4 +34,4 @@ ENV FLASK_ENV=production
 ENV PORT=${PORT:-5000}
 
 EXPOSE $PORT
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT --workers 4 backend:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT --workers 1 backend:app"]
