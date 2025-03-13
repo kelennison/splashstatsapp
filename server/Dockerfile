@@ -3,15 +3,20 @@ FROM python:3.12-slim as builder
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    gcc \
-    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libxml2-dev \
+    libxslt-dev \
     zlib1g-dev \
+    gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
 
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip
-RUN pip install --user --no-cache-dir --no-warn-script-location -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Runtime stage
 FROM python:3.12-slim
