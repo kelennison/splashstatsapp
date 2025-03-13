@@ -12,19 +12,21 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+# Install packages into /install
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Runtime stage
 FROM python:3.12-slim
 WORKDIR /app
-COPY --from=builder /root/.local /root/.local
+# Copy installed packages from builder
+COPY --from=builder /install /install
+# Copy application code
 COPY . .
-
-ENV PATH=/root/.local/bin:$PATH
+# Add /install/bin to PATH so that the installed executables are available
+ENV PATH=/install/bin:$PATH
 ENV FLASK_ENV=production
 ENV PORT=${PORT:-5000}
 
