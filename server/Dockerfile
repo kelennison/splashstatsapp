@@ -25,8 +25,11 @@ WORKDIR /app
 COPY --from=builder /install /install
 # Copy application code
 COPY . .
+
 # Add /install/bin to PATH so that the installed executables are available
 ENV PATH=/install/bin:$PATH
+# Add the custom site-packages directory to PYTHONPATH so that Python finds the modules
+ENV PYTHONPATH=/install/lib/python3.12/site-packages:$PYTHONPATH
 ENV FLASK_ENV=production
 ENV PORT=${PORT:-5000}
 
