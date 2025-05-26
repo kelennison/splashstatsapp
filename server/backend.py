@@ -22,7 +22,7 @@ def get_players():
 
     # Adjust season for playoffs if needed
     if season_type == 'playoffs' and season == '2025':
-        effective_season = '2024'
+        effective_season = '2025'
     else:
         effective_season = season
         

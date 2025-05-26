@@ -101,6 +101,10 @@ function App() {
       ...provided,
       color: '#888',
     }),
+    input: (provided) => ({
+      ...provided,
+      color: '#e0e0e0',  
+    }),
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected ? '#333' : state.isFocused ? '#222' : '#121212',
@@ -125,7 +129,10 @@ function App() {
   // Add new state variable for table expander
   const [tableExpanded, setTableExpanded] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const generateChart = () => {
+    setLoading(true);
     const payload = { 
       ...selectedPlayers, 
       min_games: minGames,
@@ -152,6 +159,9 @@ function App() {
         console.error('Error:', error);
         setChartUrl(null);
         setTableJson(null);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -278,9 +288,15 @@ function App() {
             </div>
           )}
         </div>
-        <button onClick={generateChart} style={{ marginTop: '1rem' }}>
-          Generate Radar Chart
+        <button 
+          onClick={generateChart} 
+          style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+          disabled={loading}
+        >
+          {loading && <span className="spinner"></span>}
+          {loading ? 'Generating...' : 'Generate Radar Chart'}
         </button>
+
         
         {/* Interactive Plotly Table Section */}
         {tableJson && (
