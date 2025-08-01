@@ -21,6 +21,10 @@ from flask import send_from_directory
 def serve_verification_file():
     return send_from_directory('../react-app/build', 'google39cdea0edaf02c9e.html')
 
+@app.route('/sitemap.xml')
+def serve_sitemap():
+    return send_from_directory('../react-app/build', 'sitemap.xml')
+    
 @app.route('/api/players', methods=['GET'])
 def get_players():
     season = request.args.get('season', '2025')  # Default to 2025
